@@ -3,7 +3,7 @@ import { store_urls } from "../dao/store_url.js";
 import { find_url_trough_short_url } from "../dao/Find_url.js";
 import db from "../Connection/db.connection.js";
 export const create_short_url = async (req, res) => {
-     const { url, isprotected, id } = req.body;
+     const { url, isprotected, id  , expirationDate} = req.body;
 
      console.log(req.body);
 
@@ -13,7 +13,7 @@ export const create_short_url = async (req, res) => {
  }
 
   if (isprotected && id) {
-    custom_short_url(req, res, url, id);
+    custom_short_url(req, res, url, id  , expirationDate);
   }
 
 else if(isprotected && id.length == 0){
@@ -22,13 +22,14 @@ else if(isprotected && id.length == 0){
 
 else {
     const generatedId = generateId(7);
-    store_urls(generatedId, url, res);
+
+    store_urls(generatedId, url, expirationDate , res);
   }
 };
 
 
 
-export const custom_short_url = async (req, res, url, id) => {
+export const custom_short_url = async (req, res, url, id ,expirationDate ) => {
   const query = "SELECT short_url FROM user_url WHERE short_url = ?;";
   db.query(query, [id], (err, result) => {
     if (err) {
@@ -37,16 +38,16 @@ export const custom_short_url = async (req, res, url, id) => {
     }
 
     if (result.length > 0) {
-      return res.status(409).json({ error: "Custom short URL already taken!" });
+      return res.status(409).send({ error: "Custom short URL already taken!" });
     }
 
 
-store_urls(id, url, res);
+store_urls(id, url, expirationDate , res);
  });
 };
 
 
 export const find_url_from_short_url = async (req, res) => {
-  const { id } = req.params;
+  const { id  } = req.params;
   find_url_trough_short_url(id, res);
 };

@@ -8,6 +8,7 @@ const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono"
 export default function Home() {
   return (
     <div className="text-white">
+
       <URLShortener />
     </div>
   );

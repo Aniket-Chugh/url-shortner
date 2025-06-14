@@ -15,12 +15,14 @@ const URLShortener = () => {
   const [url, setUrl] = useState("");
   const [customId, setCustomId] = useState("");
   const [useCustomId, setUseCustomId] = useState(false);
-  const [expirationDate, setExpirationDate] = useState("");
+  const [expirationDate, setExpirationDate] = useState(null);
   const [shortenedUrl, setShortenedUrl] = useState("");
   const [copied, setCopied] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [urlStats, setUrlStats] = useState(null);
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [clicks , setclicks] = useState(0);
+  const [guestlimit , setguestlimit] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -39,6 +41,7 @@ const URLShortener = () => {
           url,
           isprotected: useCustomId,
           id: customId,
+          expirationDate
         }),
       });
       const data = await res.json();
@@ -50,6 +53,14 @@ const URLShortener = () => {
         createdAt: data.created_at,
         isProtected: useCustomId,
       });
+      if (clicks == 1) {
+        setguestlimit(true);
+      }
+      setclicks(clicks+1);
+
+      console.log(clicks);
+
+
     } catch (err) {
       alert("Something went wrong!");
       console.error("Error:", err.message);
@@ -165,12 +176,15 @@ const URLShortener = () => {
             </div>
           )}
 
-          <button
-            type="submit"
-            className="bg-teal-600 text-white w-full py-3 rounded-md font-semibold hover:bg-teal-700 transition"
-          >
-            {isLoading ? "Shortening..." : "Generate Short URL"}
-          </button>
+         <button
+  type="submit"
+  className="bg-teal-600 text-white w-full py-3 rounded-md font-semibold hover:bg-teal-700 transition"
+  disabled={guestlimit ? true : false}
+  title={guestlimit ? "Guest limit exceed | Please Sign up  " : "2 chances use this as a guest"}
+>
+  {isLoading ? "Shortening..." : "Generate Short URL"}
+</button>
+
         </form>
 
         {shortenedUrl && (
