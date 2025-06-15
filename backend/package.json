@@ -18,5 +18,8 @@
     "mysql2": "^3.14.1",
     "nanoid": "^5.1.5",
     "qrcode": "^1.5.4"
+  },
+  "devDependencies": {
+    "prettier": "^3.5.3"
   }
 }

@@ -16,13 +16,15 @@ const URLShortener = () => {
   const [customId, setCustomId] = useState("");
   const [useCustomId, setUseCustomId] = useState(false);
   const [expirationDate, setExpirationDate] = useState(null);
+  const [passUrl, setPassUrl] = useState(null);
+  const [MaximumClicks, setMaximumClicks] = useState(null);
   const [shortenedUrl, setShortenedUrl] = useState("");
   const [copied, setCopied] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [urlStats, setUrlStats] = useState(null);
   const [showAdvanced, setShowAdvanced] = useState(false);
-  const [clicks , setclicks] = useState(0);
-  const [guestlimit , setguestlimit] = useState(false);
+  const [clicks, setclicks] = useState(null);
+  const [guestlimit, setguestlimit] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -41,7 +43,9 @@ const URLShortener = () => {
           url,
           isprotected: useCustomId,
           id: customId,
-          expirationDate
+          expirationDate,
+          passUrl,
+          maxClicks: MaximumClicks,
         }),
       });
       const data = await res.json();
@@ -53,14 +57,10 @@ const URLShortener = () => {
         createdAt: data.created_at,
         isProtected: useCustomId,
       });
-      if (clicks == 1) {
+      if (clicks === 1) {
         setguestlimit(true);
       }
-      setclicks(clicks+1);
-
-      console.log(clicks);
-
-
+      setclicks((prev) => (prev || 0) + 1);
     } catch (err) {
       alert("Something went wrong!");
       console.error("Error:", err.message);
@@ -83,7 +83,7 @@ const URLShortener = () => {
       <Header />
       <div className="max-w-xl mx-auto p-8 bg-white rounded-lg shadow-lg mt-10 text-gray-800">
         <h1 className="text-4xl font-bold text-center mb-6 text-teal-600">
-           Smart URL Shortener
+          Smart URL Shortener
         </h1>
 
         <form onSubmit={handleSubmit} className="space-y-5">
@@ -138,7 +138,7 @@ const URLShortener = () => {
 
           {showAdvanced && (
             <div className="p-4 border border-gray-200 rounded-md bg-gray-50 space-y-4">
-              <div className="relative opacity-50 cursor-not-allowed group">
+              <div className="relative opacity-50 group">
                 <label className="flex items-center font-semibold gap-2">
                   Password (Pro)
                   <span className="text-xs bg-gray-300 px-2 py-0.5 rounded-full">
@@ -152,7 +152,8 @@ const URLShortener = () => {
                   />
                   <input
                     type="password"
-                    disabled
+                    value={passUrl ?? ""}
+                    onChange={(e) => setPassUrl(e.target.value)}
                     placeholder="Available in Pro version"
                     className="w-full py-3 pl-10 pr-4 border border-gray-300 rounded-md bg-gray-100"
                   />
@@ -168,23 +169,38 @@ const URLShortener = () => {
                 </label>
                 <input
                   type="datetime-local"
-                  value={expirationDate}
+                  value={expirationDate ?? ""}
                   onChange={(e) => setExpirationDate(e.target.value)}
+                  className="w-full py-3 px-4 border border-gray-300 rounded-md focus:ring-2 focus:ring-teal-500"
+                />
+              </div>
+
+              <div>
+                <label className="block font-semibold mb-1">
+                  Maximum Clicks Allowed
+                </label>
+                <input
+                  type="number"
+                  value={MaximumClicks ?? ""}
+                  onChange={(e) => setMaximumClicks(e.target.value)}
                   className="w-full py-3 px-4 border border-gray-300 rounded-md focus:ring-2 focus:ring-teal-500"
                 />
               </div>
             </div>
           )}
 
-         <button
-  type="submit"
-  className="bg-teal-600 text-white w-full py-3 rounded-md font-semibold hover:bg-teal-700 transition"
-  disabled={guestlimit ? true : false}
-  title={guestlimit ? "Guest limit exceed | Please Sign up  " : "2 chances use this as a guest"}
->
-  {isLoading ? "Shortening..." : "Generate Short URL"}
-</button>
-
+          <button
+            type="submit"
+            className="bg-teal-600 text-white w-full py-3 rounded-md font-semibold hover:bg-teal-700 transition"
+            disabled={guestlimit}
+            title={
+              guestlimit
+                ? "Guest limit exceeded | Please Sign up"
+                : "2 chances to use this as a guest"
+            }
+          >
+            {isLoading ? "Shortening..." : "Generate Short URL"}
+          </button>
         </form>
 
         {shortenedUrl && (
@@ -203,9 +219,8 @@ const URLShortener = () => {
                 {copied ? <Check size={18} /> : <Copy size={18} />}
               </button>
             </div>
-
             <h1>
-              Wants analytics?{" "}
+              Want analytics?{" "}
               <Link href="/signup" className="text-black underline">
                 Create Account
               </Link>
@@ -213,7 +228,6 @@ const URLShortener = () => {
           </div>
         )}
       </div>
-
       <Features />
       <Footer />
     </div>
