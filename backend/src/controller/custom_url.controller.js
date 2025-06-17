@@ -8,6 +8,7 @@ export const custom_short_url = async (
     expirationDate,
     passUrl,
     maxClicks,
+    destroyAfterMaxClicks
 ) => {
     const query = 'SELECT short_url FROM user_url WHERE short_url = ?;';
     db.query(query, [id], (err, result) => {
@@ -26,6 +27,7 @@ export const custom_short_url = async (
             expirationDate,
             passUrl,
             maxClicks,
+            destroyAfterMaxClicks,
             res
         );
     });

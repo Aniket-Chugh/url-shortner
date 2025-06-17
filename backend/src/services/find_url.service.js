@@ -1,4 +1,4 @@
-import { DeleteUser } from "../src/dao/delete_url.js";
+import { DeleteUser } from "../dao/delete_url.js";
 
 export const advanced_features = (expirationDate, PassUrl, longUrl, pass, res) => {
     const now = new Date();

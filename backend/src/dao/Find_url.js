@@ -1,4 +1,4 @@
-import { advanced_features } from "../../services/find_url.service.js";
+import { advanced_features } from "../services/find_url.service.js";
 import db from "../Connection/db.connection.js";
 import { linkAllData } from "./link_data.js";
 export const find_url_trough_short_url = async (id, pass, res) => {

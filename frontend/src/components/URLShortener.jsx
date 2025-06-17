@@ -15,10 +15,12 @@ const URLShortener = () => {
   const [url, setUrl] = useState("");
   const [customId, setCustomId] = useState("");
   const [useCustomId, setUseCustomId] = useState(false);
+
   const [expirationDate, setExpirationDate] = useState(null);
   const [passUrl, setPassUrl] = useState(null);
   const [MaximumClicks, setMaximumClicks] = useState(null);
-  const [shortenedUrl, setShortenedUrl] = useState("");
+  const [destroyAfterMaxClicks, setDestroyAfterMaxClicks] = useState(false);
+const [shortenedUrl, setShortenedUrl] = useState("");
   const [copied, setCopied] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [urlStats, setUrlStats] = useState(null);
@@ -46,8 +48,10 @@ const URLShortener = () => {
           expirationDate,
           passUrl,
           maxClicks: MaximumClicks,
+          destroyAfterMaxClicks,
         }),
       });
+
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Failed to shorten URL");
 
@@ -57,10 +61,15 @@ const URLShortener = () => {
         createdAt: data.created_at,
         isProtected: useCustomId,
       });
+
       if (clicks === 1) {
         setguestlimit(true);
       }
-      setclicks((prev) => (prev || 0) + 1);
+
+      console.log(destroyAfterMaxClicks);
+
+
+      setclicks((prev) => (prev ?? 0) + 1);
     } catch (err) {
       alert("Something went wrong!");
       console.error("Error:", err.message);
@@ -186,17 +195,33 @@ const URLShortener = () => {
                   className="w-full py-3 px-4 border border-gray-300 rounded-md focus:ring-2 focus:ring-teal-500"
                 />
               </div>
+
+              {MaximumClicks && (
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={destroyAfterMaxClicks}
+                    onChange={() =>
+                      setDestroyAfterMaxClicks(!destroyAfterMaxClicks)
+                    }
+                    className="accent-teal-600"
+                  />
+                  <label className="font-medium">
+                    Destroy link after maximum clicks?
+                  </label>
+                </div>
+              )}
             </div>
           )}
 
           <button
             type="submit"
             className="bg-teal-600 text-white w-full py-3 rounded-md font-semibold hover:bg-teal-700 transition"
-            disabled={guestlimit}
+            disabled={guestlimit ? true : false}
             title={
               guestlimit
-                ? "Guest limit exceeded | Please Sign up"
-                : "2 chances to use this as a guest"
+                ? "Guest limit exceed | Please Sign up  "
+                : "2 chances use this as a guest"
             }
           >
             {isLoading ? "Shortening..." : "Generate Short URL"}
@@ -219,8 +244,9 @@ const URLShortener = () => {
                 {copied ? <Check size={18} /> : <Copy size={18} />}
               </button>
             </div>
+
             <h1>
-              Want analytics?{" "}
+              Wants analytics?{" "}
               <Link href="/signup" className="text-black underline">
                 Create Account
               </Link>
@@ -228,6 +254,7 @@ const URLShortener = () => {
           </div>
         )}
       </div>
+
       <Features />
       <Footer />
     </div>
