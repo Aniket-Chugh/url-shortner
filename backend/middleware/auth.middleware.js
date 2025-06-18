@@ -4,7 +4,6 @@ import db from "../src/Connection/db.connection.js";
 export const authMiddleware = async (req, res, next) => {
     const token = req.cookies.authToken;
 
-    console.log("Token:", token);
 
     if (!token) {
         return res.status(401).json({ message: "Unauthorized - No token provided" });
@@ -12,7 +11,6 @@ export const authMiddleware = async (req, res, next) => {
 
     try {
         const decoded = verifyToken(token);
-        console.log("Decoded Token:", decoded);
 
 
         const query = "SELECT * FROM users WHERE user_id = ?;";
@@ -26,7 +24,7 @@ export const authMiddleware = async (req, res, next) => {
                 return res.status(401).json({ message: "Unauthorized - User not found" });
             }
 
-            req.user = result[0]; 
+            req.user = result[0];
             next();
         });
     } catch (error) {

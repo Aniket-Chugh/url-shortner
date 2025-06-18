@@ -8,6 +8,9 @@ export const create_short_url = async (req, res) => {
         return res.status(400).json({ error: "URL is required" });
     }
 
+    const token = req.cookies.authToken;
+
+
     console.log(url, isprotected, id, expirationDate, passUrl, maxClicks, destroyAfterMaxClicks);
 
 

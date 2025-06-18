@@ -50,6 +50,7 @@ const [shortenedUrl, setShortenedUrl] = useState("");
           maxClicks: MaximumClicks,
           destroyAfterMaxClicks,
         }),
+        credentials : "include"
       });
 
       const data = await res.json();
