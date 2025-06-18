@@ -15,18 +15,17 @@ const URLShortener = () => {
   const [url, setUrl] = useState("");
   const [customId, setCustomId] = useState("");
   const [useCustomId, setUseCustomId] = useState(false);
-
   const [expirationDate, setExpirationDate] = useState(null);
-  const [passUrl, setPassUrl] = useState(null);
   const [MaximumClicks, setMaximumClicks] = useState(null);
   const [destroyAfterMaxClicks, setDestroyAfterMaxClicks] = useState(false);
-const [shortenedUrl, setShortenedUrl] = useState("");
+  const [shortenedUrl, setShortenedUrl] = useState("");
   const [copied, setCopied] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [urlStats, setUrlStats] = useState(null);
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [clicks, setclicks] = useState(null);
   const [guestlimit, setguestlimit] = useState(false);
+  const [RedirectTheLink, setRedirectTheLink] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -46,11 +45,12 @@ const [shortenedUrl, setShortenedUrl] = useState("");
           isprotected: useCustomId,
           id: customId,
           expirationDate,
-          passUrl,
+          passUrl: null, // Password feature disabled for now
           maxClicks: MaximumClicks,
           destroyAfterMaxClicks,
+          RedirectTheLink,
         }),
-        credentials : "include"
+        credentials: "include",
       });
 
       const data = await res.json();
@@ -67,12 +67,9 @@ const [shortenedUrl, setShortenedUrl] = useState("");
         setguestlimit(true);
       }
 
-      console.log(destroyAfterMaxClicks);
-
-
       setclicks((prev) => (prev ?? 0) + 1);
     } catch (err) {
-      alert("Something went wrong!");
+      alert("Something went wrong! Please login/signup to use this");
       console.error("Error:", err.message);
     }
     setIsLoading(false);
@@ -162,14 +159,14 @@ const [shortenedUrl, setShortenedUrl] = useState("");
                   />
                   <input
                     type="password"
-                    value={passUrl ?? ""}
-                    onChange={(e) => setPassUrl(e.target.value)}
-                    placeholder="Available in Pro version"
+                    disabled
+                    value=""
+                    placeholder="Work in progress – Coming soon in Pro"
                     className="w-full py-3 pl-10 pr-4 border border-gray-300 rounded-md bg-gray-100"
                   />
                 </div>
-                <p className="text-xs text-gray-500 mt-1 hidden group-hover:block">
-                  Upgrade to Pro to enable password protection.
+                <p className="text-xs text-gray-500 mt-1">
+                  This feature will be available in the Pro version.
                 </p>
               </div>
 
@@ -198,19 +195,33 @@ const [shortenedUrl, setShortenedUrl] = useState("");
               </div>
 
               {MaximumClicks && (
-                <div className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    checked={destroyAfterMaxClicks}
-                    onChange={() =>
-                      setDestroyAfterMaxClicks(!destroyAfterMaxClicks)
-                    }
-                    className="accent-teal-600"
-                  />
-                  <label className="font-medium">
-                    Destroy link after maximum clicks?
-                  </label>
-                </div>
+                <>
+                  <div>
+                    <label className="block font-semibold mb-1">
+                      Redirect After Max Clicks
+                    </label>
+                    <input
+                      type="url"
+                      value={RedirectTheLink ?? ""}
+                      onChange={(e) => setRedirectTheLink(e.target.value)}
+                      className="w-full py-3 px-4 border border-gray-300 rounded-md focus:ring-2 focus:ring-teal-500"
+                    />
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      checked={destroyAfterMaxClicks}
+                      onChange={() =>
+                        setDestroyAfterMaxClicks(!destroyAfterMaxClicks)
+                      }
+                      className="accent-teal-600"
+                    />
+                    <label className="font-medium">
+                      Destroy link after maximum clicks?
+                    </label>
+                  </div>
+                </>
               )}
             </div>
           )}
@@ -221,8 +232,8 @@ const [shortenedUrl, setShortenedUrl] = useState("");
             disabled={guestlimit ? true : false}
             title={
               guestlimit
-                ? "Guest limit exceed | Please Sign up  "
-                : "2 chances use this as a guest"
+                ? "Guest limit exceeded | Please Sign up"
+                : "You have 2 chances as a guest"
             }
           >
             {isLoading ? "Shortening..." : "Generate Short URL"}
@@ -247,7 +258,7 @@ const [shortenedUrl, setShortenedUrl] = useState("");
             </div>
 
             <h1>
-              Wants analytics?{" "}
+              Want analytics?{" "}
               <Link href="/signup" className="text-black underline">
                 Create Account
               </Link>

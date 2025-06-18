@@ -1,11 +1,13 @@
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import React, { useState } from "react";
+import { useEffect } from "react";
 
 export default function SignUpPage() {
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [login, setlogin] = useState("");
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -25,17 +27,27 @@ export default function SignUpPage() {
             }
             if (response.ok) {
                 alert("Registration Successful ✅");
+
                 setUsername("");
                 setEmail("")
                 setPassword("")
             }
 
             const data = await response.json();
+            console.log(data);
+
+            console.log(data.success);
+
+            setlogin(data.success)
+
+
             console.log("Server Response:", data);
         } catch (error) {
             console.error("Error:", error.message);
         }
     };
+
+
 
     return (
         <div >
@@ -44,7 +56,7 @@ export default function SignUpPage() {
             <div className="min-h-screen flex items-center justify-center bg-white px-4">
                 <div className="bg-white p-8 rounded-3xl shadow-lg w-full max-w-md border border-green-100">
                     <h2 className="text-3xl font-bold text-center text-green-600 mb-2">
-                        🌿 Create Account
+                        🌿 Create Account || {login}
                     </h2>
                     <p className="text-center text-gray-500 mb-6">
                         Start shortening your URLs the green way!

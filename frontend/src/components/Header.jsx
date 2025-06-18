@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import { Menu, X, Link as LinkIcon } from "lucide-react";
 import Link from "next/link";
+import { useAuth } from "@/authContext/authContext";
 
 const Header = () => {
+      const { isAuthenticated, setIsAuthenticated } = useAuth();
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
@@ -38,16 +41,40 @@ const Header = () => {
             >
               Pricing
             </Link>
-<Link href={"/login"}>
+
+
+            {
+                isAuthenticated ? <Link href={"/logout"}>
+
+
+            <button className="text-sm font-medium text-gray-300 hover:text-white transition-colors">
+              Logout
+            </button>
+</Link> : <Link href={"/login"}>
+
+
             <button className="text-sm font-medium text-gray-300 hover:text-white transition-colors">
               Login
             </button>
 </Link>
-<Link href={"/signup"}>
+            }
+
+
+
+
+            {
+                isAuthenticated ? <Link href={"/dashboard"}>
+            <button className="bg-gradient-to-r from-green-500 to-teal-500 text-white text-sm px-5 py-2 rounded-lg shadow-md hover:scale-105 transition-transform">
+              Dashboard
+            </button>
+</Link>: <Link href={"/signup"}>
             <button className="bg-gradient-to-r from-green-500 to-teal-500 text-white text-sm px-5 py-2 rounded-lg shadow-md hover:scale-105 transition-transform">
               Signup
             </button>
 </Link>
+            }
+
+
           </nav>
 
           {/* Mobile Toggle */}

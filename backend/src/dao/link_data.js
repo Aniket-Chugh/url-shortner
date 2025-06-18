@@ -18,6 +18,8 @@ export const linkAllData = (id) => {
             const expirationDate = result[0].expiration_date;
             const passUrl = result[0].pass_url;
             const maxClicks = result[0].max_clicks;
+            const destroyAfterMaxClicks = result[0].destroythelink
+            const redirectionLink = result[0].redirectionLink;
 
             resolve({
                 longUrl,
@@ -25,6 +27,8 @@ export const linkAllData = (id) => {
                 expirationDate,
                 passUrl,
                 maxClicks,
+                destroyAfterMaxClicks,
+                redirectionLink
             });
         });
     });
