@@ -4,8 +4,9 @@ import { linkAllData } from "./link_data.js";
 export const find_url_trough_short_url = async (id, pass, res) => {
 
     const data = await linkAllData(id);
-    console.log(data);
-
+    if (!data || !data.longUrl) {
+        return res.redirect("http://localhost:3000/");
+    }
     const longUrl = data.longUrl;
     const currentclicks = data.currentClicks;
     const expirationDate = data.expirationDate;

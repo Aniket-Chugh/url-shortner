@@ -10,7 +10,7 @@ export const linkAllData = (id) => {
             }
 
             if (result.length === 0) {
-                return reject("URL not found");
+                return resolve(null);
             }
 
             const longUrl = result[0].long_url;

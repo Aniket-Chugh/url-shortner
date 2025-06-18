@@ -1,7 +1,4 @@
 import jwt from "jsonwebtoken"
-import { cokkieOptions } from "../config/cokkie.config.js";
-import dotenv from 'dotenv';
-dotenv.config({ path: './config/.env' });
 import { nanoid } from "nanoid";
 export const generateId = (id) => {
     return nanoid(id);
@@ -13,5 +10,7 @@ export const signToken = (payload) => {
 }
 
 export const verifyToken = (payload) => {
-    return jwt.verify(payload, process.env.JWT_SECRET)
+    const decoded = jwt.verify(payload, process.env.JWT_SECRET)
+    console.log(decoded.user_id);
+
 }
