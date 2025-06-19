@@ -1,15 +1,18 @@
 import db from "../Connection/db.connection.js";
 
-export const store_urls = (id, url, expirationDate, passUrl, maxClicks, destroyAfterMaxClicks, RedirectTheLink, userid, res) => {
+export const store_urls = (id, url, expirationDate, passUrl, maxClicks, destroyAfterMaxClicks, RedirectTheLink, userid, qrcode, res) => {
     const query = `
     INSERT INTO user_url
-    (short_url, long_url, expiration_date, pass_url, max_clicks , destroythelink , redirectionLink , link_id)
-    VALUES (?, ?, ?, ?, ? , ? , ? , ?)
+    (short_url, long_url, expiration_date, pass_url, max_clicks , destroythelink , redirectionLink , link_id , qrcode)
+    VALUES (?, ?, ?, ?, ? , ? , ? , ? , ?)
   `;
+
+    console.log(id, url, expirationDate, passUrl, maxClicks, destroyAfterMaxClicks, RedirectTheLink, userid, qrcode);
+
 
     db.query(
         query,
-        [id, url, expirationDate, passUrl, maxClicks, destroyAfterMaxClicks, RedirectTheLink, userid],
+        [id, url, expirationDate, passUrl, maxClicks, destroyAfterMaxClicks, RedirectTheLink, userid, qrcode],
         (err, result) => {
             if (err) {
                 console.error("Database error:", err);

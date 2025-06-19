@@ -13,8 +13,6 @@ export default function SignUpPage() {
     const [login, setlogin] = useState("");
 
 
-
-
     useEffect(() => {
         if (isAuthenticated) {
             Router.push("/dashboard");

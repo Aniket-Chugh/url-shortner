@@ -1,5 +1,6 @@
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 
@@ -83,6 +84,11 @@ export default function Dashboard() {
                                     <th className="px-4 py-2 text-left">Short URL</th>
                                     <th className="px-4 py-2 text-left">Original URL</th>
                                     <th className="px-4 py-2 text-left">Expiration</th>
+                                    <th className="px-4 py-2 text-left">Created At</th>
+                                    <th className="px-4 py-2 text-left">QR Code </th>
+                                    <th className="px-4 py-2 text-left">Clicks</th>
+
+
                                     <th className="px-4 py-2 text-left">Actions</th>
                                 </tr>
                             </thead>
@@ -98,6 +104,34 @@ export default function Dashboard() {
                                         <td className="px-4 py-2 break-all">{item.long_url}</td>
                                         <td className="px-4 py-2">
                                             {item.expiration_date ? new Date(item.expiration_date).toLocaleDateString() : "No Expiry"}
+                                        </td>
+
+
+                                        <td className="px-4 py-2">
+                                            {item.created_at}
+                                        </td>
+
+                                        <td className="px-4 py-2">
+
+                                            {item.qrcode ? (
+                                                <>
+                                                    <img
+                                                        src={item.qrcode}
+                                                        alt="QR Code"
+                                                        className="w-20 h-20 object-contain mx-auto border rounded"
+                                                    />
+                                                    <a
+                                                        href={item.qrcode}
+                                                        download={`qrcode_${item.id || index}.png`}
+                                                        className="text-xs text-white bg-green-600 hover:bg-green-700 px-3 py-1 rounded block mt-1"
+                                                    >
+                                                        Download
+                                                    </a>
+                                                </>
+                                            ) : (
+                                                <span className="text-gray-400">No QR</span>
+                                            )}
+
                                         </td>
                                         <td className="px-4 py-2 flex gap-2">
                                             <button

@@ -8,6 +8,7 @@ import { errorHandler } from "./src/utils/error_handling.js";
 import { verifyToken } from "./src/utils/generate_nanoid.util.js";
 import { authMiddleware } from "./src/middleware/auth.middleware.js";
 import dashboardRouter from "./src/routes/dashboard.route.js";
+import QrRouter from "./src/routes/qrgenetate.route.js";
 const app = express();
 
 app.use(express.json());
@@ -37,6 +38,7 @@ app.get("/auth/refresh", verifyToken, (req, res) => {
 app.use("/api/create", router);
 app.use("/auth", authRoute)
 app.use("/dashboard", dashboardRouter);
+app.use("/generateqr", QrRouter);
 
 
 app.use("/", Redirectrouter);

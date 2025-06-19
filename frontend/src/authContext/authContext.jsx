@@ -6,6 +6,7 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState(null);
+  const [loading , setLoading] = useState(true);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -17,6 +18,7 @@ export const AuthProvider = ({ children }) => {
         if (data.success) {
           setIsAuthenticated(true);
           setUser(data.user);
+          setLoading(false)
         } else {
           setIsAuthenticated(false);
         }
