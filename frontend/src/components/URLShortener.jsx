@@ -25,7 +25,7 @@ const URLShortener = () => {
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [clicks, setclicks] = useState(null);
   const [guestlimit, setguestlimit] = useState(false);
-  const [RedirectTheLink, setRedirectTheLink] = useState("");
+  const [RedirectTheLink, setRedirectTheLink] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -45,7 +45,7 @@ const URLShortener = () => {
           isprotected: useCustomId,
           id: customId,
           expirationDate,
-          passUrl: null, // Password feature disabled for now
+          passUrl: null,
           maxClicks: MaximumClicks,
           destroyAfterMaxClicks,
           RedirectTheLink,

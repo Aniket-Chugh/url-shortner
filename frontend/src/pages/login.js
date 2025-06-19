@@ -1,11 +1,21 @@
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import React, { useState } from "react";
+import { useEffect } from "react";
+import Router from "next/router";
+import { useAuth } from "@/authContext/authContext";
 
 export default function LoginPage() {
+
+    const { isAuthenticated, setIsAuthenticated } = useAuth();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
+    useEffect(() => {
+        if (isAuthenticated) {
+            Router.push("/dashboard");
+        }
+    }, [isAuthenticated]);
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
@@ -26,7 +36,9 @@ export default function LoginPage() {
 
 
             if (response.ok) {
+                setIsAuthenticated(true);
                 alert("login done");
+
             }
 
 

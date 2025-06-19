@@ -1,5 +1,5 @@
-import { verifyToken } from "../src/utils/generate_nanoid.util.js";
-import db from "../src/Connection/db.connection.js";
+import { verifyToken } from "../utils/generate_nanoid.util.js";
+import db from "../Connection/db.connection.js";
 
 export const authMiddleware = async (req, res, next) => {
     const token = req.cookies.authToken;
@@ -25,7 +25,7 @@ export const authMiddleware = async (req, res, next) => {
             }
 
             req.user = result[0];
-            
+
             next();
         });
     } catch (error) {

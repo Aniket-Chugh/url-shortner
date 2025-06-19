@@ -9,7 +9,8 @@ export const custom_short_url = async (
     passUrl,
     maxClicks,
     destroyAfterMaxClicks,
-    RedirectTheLink
+    RedirectTheLink,
+    userid
 ) => {
     const query = 'SELECT short_url FROM user_url WHERE short_url = ?;';
     db.query(query, [id], (err, result) => {
@@ -30,6 +31,7 @@ export const custom_short_url = async (
             maxClicks,
             destroyAfterMaxClicks,
             RedirectTheLink,
+            userid,
             res
         );
     });

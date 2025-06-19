@@ -1,16 +1,48 @@
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
+import Router from "next/router";
 import React, { useState } from "react";
 import { useEffect } from "react";
+import { useAuth } from "@/authContext/authContext";
 
 export default function SignUpPage() {
+    const { isAuthenticated, setIsAuthenticated } = useAuth();
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [login, setlogin] = useState("");
 
+
+
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            Router.push("/dashboard");
+        }
+    }, [isAuthenticated]);
+
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        // Username validation
+        const usernameRegex = /^[a-zA-Z0-9_]{3,20}$/;
+        if (!usernameRegex.test(username)) {
+            return alert("❌ Username must be 3-20 characters long and can only include letters, numbers, and underscores.");
+        }
+
+        // Email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return alert("❌ Please enter a valid email address.");
+        }
+
+        // Password validation
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?#&])[A-Za-z\d@$!%*?#&]{8,}$/;
+        if (!passwordRegex.test(password)) {
+            return alert("❌ Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.");
+        }
+
         try {
             const response = await fetch("http://localhost:3001/auth/signup", {
                 method: "POST",
@@ -19,33 +51,34 @@ export default function SignUpPage() {
                 },
                 body: JSON.stringify({ username, email, password }),
                 credentials: "include"
-
             });
 
+            const data = await response.json();
+            console.log("Server Response:", data);
+
             if (!response.ok) {
-                alert("Failed to register user");
+                return alert(`❌ Registration failed: ${data.message || "Unknown error"}`);
             }
             if (response.ok) {
-                alert("Registration Successful ✅");
-
-                setUsername("");
-                setEmail("")
-                setPassword("")
+                setIsAuthenticated(true)
+                Router.push("/")
             }
 
-            const data = await response.json();
-            console.log(data);
-
-            console.log(data.success);
-
-            setlogin(data.success)
 
 
-            console.log("Server Response:", data);
+
+
+            alert("✅ Registration Successful!");
+            setUsername("");
+            setEmail("");
+            setPassword("");
+            setlogin(data.success);
         } catch (error) {
             console.error("Error:", error.message);
+            alert("❌ Something went wrong. Please try again.");
         }
     };
+
 
 
 

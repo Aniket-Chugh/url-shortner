@@ -6,7 +6,8 @@ import Redirectrouter from "./src/routes/redirect_url.route.js";
 import authRoute from "./src/routes/auth.route.js";
 import { errorHandler } from "./src/utils/error_handling.js";
 import { verifyToken } from "./src/utils/generate_nanoid.util.js";
-import { authMiddleware } from "./middleware/auth.middleware.js";
+import { authMiddleware } from "./src/middleware/auth.middleware.js";
+import dashboardRouter from "./src/routes/dashboard.route.js";
 const app = express();
 
 app.use(express.json());
@@ -35,6 +36,7 @@ app.get("/auth/refresh", verifyToken, (req, res) => {
 
 app.use("/api/create", router);
 app.use("/auth", authRoute)
+app.use("/dashboard", dashboardRouter);
 
 
 app.use("/", Redirectrouter);
