@@ -23,19 +23,16 @@ export default function SignUpPage() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Username validation
         const usernameRegex = /^[a-zA-Z0-9_]{3,20}$/;
         if (!usernameRegex.test(username)) {
             return alert("❌ Username must be 3-20 characters long and can only include letters, numbers, and underscores.");
         }
 
-        // Email validation
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
             return alert("❌ Please enter a valid email address.");
         }
 
-        // Password validation
         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?#&])[A-Za-z\d@$!%*?#&]{8,}$/;
         if (!passwordRegex.test(password)) {
             return alert("❌ Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.");
@@ -61,10 +58,6 @@ export default function SignUpPage() {
                 setIsAuthenticated(true)
                 Router.push("/")
             }
-
-
-
-
 
             alert("✅ Registration Successful!");
             setUsername("");

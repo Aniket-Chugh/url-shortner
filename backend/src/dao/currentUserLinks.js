@@ -7,7 +7,6 @@ export const dashBoardDb = (userId, res) => {
             console.error("Database error:", err);
             return res.status(500).json({ message: "Internal Server Error" });
         }
-
-        res.json(result);
+        res.send(result);
     });
 }

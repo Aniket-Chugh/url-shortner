@@ -7,7 +7,6 @@ export const store_urls = (id, url, expirationDate, passUrl, maxClicks, destroyA
     VALUES (?, ?, ?, ?, ? , ? , ? , ? , ?)
   `;
 
-    console.log(id, url, expirationDate, passUrl, maxClicks, destroyAfterMaxClicks, RedirectTheLink, userid, qrcode);
 
 
     db.query(

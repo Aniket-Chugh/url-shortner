@@ -6,7 +6,7 @@ export const generateId = (id) => {
 
 
 export const signToken = (payload) => {
-    return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "5m" })
+    return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "15m" })
 }
 
 export const verifyToken = (payload) => {

@@ -1,4 +1,31 @@
+# Environment variables
 .env
+
+# Node modules
+node_modules/
 node_modules/
 
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# IDEs and editors
+.vscode/
+.idea/
+
+# Build artifacts
+dist/
+build/
+
+# Optional: Dependency lock files (if using yarn or pnpm instead of npm)
+yarn.lock
+pnpm-lock.yaml
+
+# Formatting/Tool config (optional to ignore)
 .prettierrc

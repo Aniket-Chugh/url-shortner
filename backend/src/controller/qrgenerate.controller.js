@@ -2,7 +2,6 @@ import QRCode from "qrcode";
 
 export const generateQr = async (url, res) => {
     console.log(url);
-
     try {
         const qrCodeImage = await QRCode.toDataURL(url);
         return qrCodeImage;

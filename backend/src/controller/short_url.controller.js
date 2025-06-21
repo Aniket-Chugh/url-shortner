@@ -7,13 +7,12 @@ import { generateQr } from "./qrgenerate.controller.js";
 export const create_short_url = async (req, res) => {
     const userid = req.user.user_id;
 
-
-
     const { url, isprotected, id, expirationDate, passUrl, maxClicks, destroyAfterMaxClicks, RedirectTheLink } = req.body;
 
     const qrcode = await generateQr(url, res);
-
-    console.log(qrcode);
+    if (!qrcode) {
+        return res.status(500).json({ error: "Failed to generate QR code" });
+    }
 
 
     if (!url) {

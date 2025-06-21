@@ -1,12 +1,10 @@
-import Footer from "@/components/Footer";
-import Header from "@/components/Header";
-import React, { useState } from "react";
-import { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Router from "next/router";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import { useAuth } from "@/authContext/authContext";
 
 export default function LoginPage() {
-
     const { isAuthenticated, setIsAuthenticated } = useAuth();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -16,8 +14,10 @@ export default function LoginPage() {
             Router.push("/dashboard");
         }
     }, [isAuthenticated]);
+
     const handleLogin = async (e) => {
         e.preventDefault();
+
         try {
             const response = await fetch("http://localhost:3001/auth/login", {
                 method: "POST",
@@ -25,28 +25,22 @@ export default function LoginPage() {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({ email, password }),
-                credentials: "include"
+                credentials: "include",
             });
 
+            const data = await response.json();
 
             if (!response.ok) {
-                alert("Login failed. Please check your credentials.");
+                alert(data.error || "Login failed. Please check your credentials.");
                 return;
             }
 
-
-            if (response.ok) {
-                setIsAuthenticated(true);
-                alert("login done");
-
-            }
-
-
-            const data = await response.json();
-            console.log("Login Successful:", data);
+            setIsAuthenticated(true);
             alert("Login Successful ✨");
+            Router.push("/dashboard");
         } catch (error) {
-            console.error("Error:", error.message);
+            console.error("Login Error:", error.message);
+            alert("Something went wrong. Please try again later.");
         }
     };
 
@@ -65,7 +59,9 @@ export default function LoginPage() {
 
                     <form onSubmit={handleLogin} className="space-y-5">
                         <div>
-                            <label className="block mb-1 text-gray-600 font-medium">Email</label>
+                            <label className="block mb-1 text-gray-600 font-medium">
+                                Email
+                            </label>
                             <input
                                 type="email"
                                 value={email}
@@ -77,7 +73,9 @@ export default function LoginPage() {
                         </div>
 
                         <div>
-                            <label className="block mb-1 text-gray-600 font-medium">Password</label>
+                            <label className="block mb-1 text-gray-600 font-medium">
+                                Password
+                            </label>
                             <input
                                 type="password"
                                 value={password}
@@ -109,7 +107,10 @@ export default function LoginPage() {
 
                     <p className="mt-6 text-center text-sm text-gray-500">
                         Don't have an account?{" "}
-                        <a href="/signup" className="text-green-600 font-semibold hover:underline">
+                        <a
+                            href="/signup"
+                            className="text-green-600 font-semibold hover:underline"
+                        >
                             Sign up
                         </a>
                     </p>
