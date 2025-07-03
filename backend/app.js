@@ -1,6 +1,9 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import http from "http";
+import { Server } from "socket.io";
+
 import router from "./src/routes/short_url.route.js";
 import Redirectrouter from "./src/routes/redirect_url.route.js";
 import authRoute from "./src/routes/auth.route.js";
@@ -13,18 +16,35 @@ import deleteRouter from "./src/routes/delete.route.js";
 import editRouter from "./src/routes/edit.route.js";
 
 const app = express();
+const server = http.createServer(app);
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+export const io = new Server(server, {
+    cors: {
+        origin: "http://localhost:3000",
+        methods: ["GET", "POST"],
+        credentials: true,
+    },
+});
+
+io.on("connection", (socket) => {
+    console.log("🔌 New client connected:", socket.id);
+
+    socket.on("disconnect", () => {
+        console.log("❌ Client disconnected:", socket.id);
+    });
+});
+
 app.use(cors({
     origin: "http://localhost:3000",
-    credentials: true
-})); app.use(cookieParser());
+    credentials: true,
+}));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 app.get("/", (req, res) => {
     res.redirect("http://localhost:3000/");
 });
-
 
 app.get("/api/me", authMiddleware, (req, res) => {
     res.json({
@@ -33,25 +53,33 @@ app.get("/api/me", authMiddleware, (req, res) => {
     });
 });
 
+app.post("/logout", (req, res) => {
+    res.clearCookie("authToken", {
+        httpOnly: true,
+        secure: true,
+        sameSite: "lax",
+    });
+
+
+    return res.status(200).json({
+        message: "logged out successfully", success: true,
+    });
+
+})
+
 app.get("/auth/refresh", verifyToken, (req, res) => {
     res.status(200).json({ success: true, user: req.user });
 });
 
-
 app.use("/editlink", editRouter);
-
 app.use("/api/create", router);
-app.use("/auth", authRoute)
+app.use("/auth", authRoute);
 app.use("/dashboard", dashboardRouter);
 app.use("/generateqr", QrRouter);
 app.use("/deletelink", deleteRouter);
-
-
 app.use("/", Redirectrouter);
+app.use(errorHandler);
 
-
-app.use(errorHandler)
-
-app.listen(3001, () => {
-    console.log("Server is running on port 3001");
-})
+server.listen(3001, () => {
+    console.log("🚀 Server + Socket.IO running on http://localhost:3001");
+});

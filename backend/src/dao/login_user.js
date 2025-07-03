@@ -2,6 +2,7 @@ import db from "../Connection/db.connection.js";
 import bcrypt, { hash } from "bcrypt"
 import { signToken } from "../utils/generate_nanoid.util.js";
 import { cokkieOptions } from "../config/cokkie.config.js";
+import { io } from "../../app.js";
 
 export const loginUser = (email, password, res) => {
     const query = "SELECT * FROM users where email =?;";
@@ -24,20 +25,27 @@ export const loginUser = (email, password, res) => {
                 }
 
                 const token = signToken({ userId })
-                res.cookie("authToken", token, cokkieOptions)
+                res.cookie("authToken", token, cokkieOptions);
+
+
+                const userData = {
+                    id: user.user_id,
+                    username: user.username,
+                    email: user.email,
+                    created_at: user.created_at,
+                    isverified: user.is_verified,
+                    subscription: user.subscription,
+                    toolUsed: user.short_url_count,
+                    lastLogin: now_time,
+                };
+
+
+
+                io.emit("authUpdated", userData)
                 res.json({
                     success: true,
                     message: "Login Successfull",
-                    user: {
-                        id: user.user_id,
-                        username: user.username,
-                        email: user.email,
-                        created_at: user.created_at,
-                        isverified: user.is_verified,
-                        subscription: user.subscription,
-                        toolUsed: user.short_url_count,
-                        lastLogin: now_time
-                    }
+                    user: userData
 
                 })
             });

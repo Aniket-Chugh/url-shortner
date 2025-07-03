@@ -112,6 +112,15 @@ const URLShortener = () => {
                 required
               />
             </div>
+
+            {guestlimit && (
+              <p className="text-red-500 text-sm">
+                Guest limit exceeded | Please Sign up
+              </p>
+            )}
+
+
+            
           </div>
 
           <div className="flex items-center gap-2">

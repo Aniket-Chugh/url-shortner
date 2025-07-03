@@ -5,9 +5,13 @@ import Header from "@/components/Header";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import Popup from 'reactjs-popup';
+import { useAuth } from "@/authContext/authContext";
 import 'reactjs-popup/dist/index.css';
+import { getSocket } from "@/authContext/socket";
+import Link from "next/link";
 
 export default function Dashboard() {
+    const { isAuthenticated } = useAuth();
     const router = useRouter();
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -41,6 +45,16 @@ export default function Dashboard() {
                 setLoading(false);
             });
     }, [router]);
+
+    const socket = getSocket();
+
+
+    useEffect(() => {
+        if (!isAuthenticated) {
+            router.push("/login");
+        }
+    }, [isAuthenticated])
+
 
     const handleDelete = async (id) => {
         if (!confirm("Are you sure you want to delete this URL?")) return;

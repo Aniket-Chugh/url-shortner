@@ -8,6 +8,22 @@ const Header = () => {
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+
+
+  const logout = async()=>{
+const res = await fetch("http://localhost:3001/logout" , {
+    method:"POST",
+    credentials: "include",
+})
+
+
+if (res) {
+    setIsAuthenticated(false);
+    console.log(res.message);
+}
+  }
+
+
   return (
     <header className="sticky top-0 z-50 bg-gray-900/80 backdrop-blur-lg border-b border-gray-700">
       <div className="mx-auto max-w-7xl px-4 md:px-12 py-4">
@@ -44,13 +60,13 @@ const Header = () => {
 
 
             {
-                isAuthenticated ? <Link href={"/logout"}>
+                isAuthenticated ?
 
 
-            <button className="text-sm font-medium text-gray-300 hover:text-white transition-colors">
+            <button onClick={logout} className="text-sm font-medium text-gray-300 hover:text-white transition-colors">
               Logout
             </button>
-</Link> : <Link href={"/login"}>
+: <Link href={"/login"}>
 
 
             <button className="text-sm font-medium text-gray-300 hover:text-white transition-colors">
@@ -77,7 +93,6 @@ const Header = () => {
 
           </nav>
 
-          {/* Mobile Toggle */}
           <button
             className="md:hidden text-white p-2"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -86,7 +101,6 @@ const Header = () => {
           </button>
         </div>
 
-        {/* Mobile Menu */}
         {isMenuOpen && (
           <div className="md:hidden mt-4 border-t border-gray-700 pt-4">
             <nav className="flex flex-col gap-4 text-sm">
