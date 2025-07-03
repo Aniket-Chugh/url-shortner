@@ -2,6 +2,7 @@ import db from "../Connection/db.connection.js";
 import { v4 as uuidv4 } from 'uuid';
 import bcrypt from "bcrypt";
 import { signToken } from "../utils/generate_nanoid.util.js";
+import { io } from "../../app.js";
 
 export const registerUser = async (username, email, password, callback) => {
     const userId = uuidv4();
@@ -28,6 +29,10 @@ export const registerUser = async (username, email, password, callback) => {
                 }
 
                 const token = await signToken({ userId });
+
+
+                io.emit("authUpdated")
+
                 callback(null, token);
             });
         });
